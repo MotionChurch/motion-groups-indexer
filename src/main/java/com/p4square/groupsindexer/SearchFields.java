@@ -90,9 +90,9 @@ public class SearchFields implements RequestHandler<APIGatewayProxyRequestEvent,
             cachedFields = new ArrayList<>();
             final GetCustomFieldLabelsResponse labels = ccbClient.getCustomFieldLabels();
 
-            cachedFields.add(new SearchField("groupTypeId", "Group Type", getValues(LookupTableType.GROUP_TYPE)));
+            cachedFields.add(new SearchField("groupType", "Group Type", getValues(LookupTableType.GROUP_TYPE)));
             // TODO fields.add(new SearchField("campusId", "Campus", ...));
-            cachedFields.add(new SearchField("meetingDayId", "Day", getValues(LookupTableType.MEET_DAY)));
+            cachedFields.add(new SearchField("meetingDay", "Day", getValues(LookupTableType.MEET_DAY)));
 
 
             for (final CustomField field : labels.getCustomFields()) {
