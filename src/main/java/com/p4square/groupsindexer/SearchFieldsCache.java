@@ -1,84 +1,34 @@
 package com.p4square.groupsindexer;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p4square.ccbapi.CCBAPI;
-import com.p4square.ccbapi.CCBAPIClient;
 import com.p4square.ccbapi.model.*;
-import com.p4square.groupsindexer.model.ErrorResponse;
 import com.p4square.groupsindexer.model.SearchField;
 import com.p4square.groupsindexer.model.StringPair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * SearchFields is an API Gateway Proxy which returns the searchable dropdown fields and their choices.
- *
- * Required (custom) environment variables:
- * <ul>
- *  <li>CCBAPIURL</li>
- *  <li>CCBAPIUser</li>
- *  <li>CCBAPIPassword</li>
- * </ul>
- *
- */
-public class SearchFields implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-
+public class SearchFieldsCache {
     private static final long REFRESH_INTERVAL_MS = 15 * 60 * 1000;
 
-    private static final Logger LOG = LogManager.getLogger(GroupsSearch.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final Logger LOG = LogManager.getLogger(SearchFieldsCache.class);
 
     private final CCBAPI ccbClient;
 
     private List<SearchField> cachedFields;
     private long lastRefresh;
 
-    public SearchFields() throws Exception {
-        // Setup CCB Client
-        final String CCBAPIURL = System.getenv("CCBAPIURL");
-        final String CCBAPIUser = System.getenv("CCBAPIUser");
-        final String CCBAPIPassword = System.getenv("CCBAPIPassword");
-        ccbClient = new CCBAPIClient(new URI(CCBAPIURL), CCBAPIUser, CCBAPIPassword);
+    public SearchFieldsCache(CCBAPI ccbClient) {
+        this.ccbClient = ccbClient;
     }
 
-    @Override
-    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
-        final APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-        try {
-            final List<SearchField> fields = getFields();
-            if (fields == null) {
-                response.setStatusCode(500);
-                response.setBody(MAPPER.writeValueAsString(new ErrorResponse("Unable to get search fields.")));
-                return response;
-            }
-
-            response.setStatusCode(200);
-            response.setBody(MAPPER.writeValueAsString(fields));
-
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-            response.setStatusCode(500);
-            try {
-                response.setBody(MAPPER.writeValueAsString(new ErrorResponse(e.getMessage())));
-            } catch (JsonProcessingException _) {
-                // Unexpected.
-            }
-        }
-
-        return response;
-    }
-
-    private synchronized List<SearchField> getFields() {
+    public synchronized List<SearchField> getSearchFields() {
         if (System.currentTimeMillis() - lastRefresh < REFRESH_INTERVAL_MS) {
             LOG.debug("Using cached CCB fields");
             return cachedFields;
@@ -149,5 +99,4 @@ public class SearchFields implements RequestHandler<APIGatewayProxyRequestEvent,
                 .map(entry -> StringPair.of(String.valueOf(entry.getId()), entry.getName()))
                 .collect(Collectors.toList());
     }
-
 }

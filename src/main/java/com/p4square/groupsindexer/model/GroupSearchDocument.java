@@ -29,9 +29,6 @@ public class GroupSearchDocument {
     @JsonProperty("leader-name")
     private String leaderName;
 
-    @JsonProperty("leader-email")
-    private String leaderEmail;
-
     @JsonProperty("member-count")
     private int currentMembers;
 
@@ -102,14 +99,6 @@ public class GroupSearchDocument {
 
     public void setLeaderName(String leaderName) {
         this.leaderName = leaderName;
-    }
-
-    public String getLeaderEmail() {
-        return leaderEmail;
-    }
-
-    public void setLeaderEmail(String leaderEmail) {
-        this.leaderEmail = leaderEmail;
     }
 
     public String getImageUrl() {

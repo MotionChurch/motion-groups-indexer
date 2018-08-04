@@ -19,7 +19,6 @@ public class GroupSearchDocumentAdapter implements Function<GroupProfile, GroupS
         doc.setImageUrl(groupProfile.getImageUrl());
         doc.setLeaderId(groupProfile.getMainLeader().getId());
         doc.setLeaderName(groupProfile.getMainLeader().getFullName());
-        doc.setLeaderEmail(groupProfile.getMainLeader().getEmail());
         doc.setCurrentMembers(groupProfile.getCurrentMembers());
         doc.setGroupCapacity(groupProfile.getGroupCapacity());
         doc.setChildcareProvided(groupProfile.isChildcareProvided());
