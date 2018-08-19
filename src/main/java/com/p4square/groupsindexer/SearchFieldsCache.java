@@ -40,7 +40,6 @@ public class SearchFieldsCache {
             cachedFields = new ArrayList<>();
             final GetCustomFieldLabelsResponse labels = ccbClient.getCustomFieldLabels();
 
-            cachedFields.add(new SearchField("groupType", "Group Type", getValues(LookupTableType.GROUP_TYPE)));
             // TODO fields.add(new SearchField("campusId", "Campus", ...));
             cachedFields.add(new SearchField("meetingDay", "Day", getValues(LookupTableType.MEET_DAY)));
 

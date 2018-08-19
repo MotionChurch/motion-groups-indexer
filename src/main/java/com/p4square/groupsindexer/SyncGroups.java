@@ -96,6 +96,11 @@ public class SyncGroups implements RequestHandler<ScheduledEvent, String> {
                     continue;
                 }
 
+                if (!profile.getGroupType().getName().equals("Community")) {
+                    LOG.info("Skipping non-Community group " + profile.getName());
+                    continue;
+                }
+
                 // Transform GroupProfile to Search Document.
                 final GroupSearchDocument document = ADAPTER.apply(profile);
 
