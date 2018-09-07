@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A group description in ElasticSearch.
+ * A group description in the search results.
  */
 public class GroupSearchDocument {
 
@@ -28,6 +28,12 @@ public class GroupSearchDocument {
 
     @JsonProperty("leader-name")
     private String leaderName;
+
+    @JsonProperty("leader-email")
+    private String leaderEmail;
+
+    @JsonProperty("location-city")
+    private String locationCity;
 
     @JsonProperty("member-count")
     private int currentMembers;
@@ -99,6 +105,22 @@ public class GroupSearchDocument {
 
     public void setLeaderName(String leaderName) {
         this.leaderName = leaderName;
+    }
+
+    public String getLeaderEmail() {
+        return leaderEmail;
+    }
+
+    public void setLeaderEmail(String leaderEmail) {
+        this.leaderEmail = leaderEmail;
+    }
+
+    public String getLocationCity() {
+        return locationCity;
+    }
+
+    public void setLocationCity(String locationCity) {
+        this.locationCity = locationCity;
     }
 
     public String getImageUrl() {

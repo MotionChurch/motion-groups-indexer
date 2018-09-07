@@ -19,6 +19,10 @@ public class GroupSearchDocumentAdapter implements Function<GroupProfile, GroupS
         doc.setImageUrl(groupProfile.getImageUrl());
         doc.setLeaderId(groupProfile.getMainLeader().getId());
         doc.setLeaderName(groupProfile.getMainLeader().getFullName());
+        doc.setLeaderEmail(groupProfile.getMainLeader().getEmail());
+        if (groupProfile.getAddresses().size() > 0) {
+            doc.setLocationCity(groupProfile.getAddresses().get(0).getCity());
+        }
         doc.setCurrentMembers(groupProfile.getCurrentMembers());
         doc.setGroupCapacity(groupProfile.getGroupCapacity());
         doc.setChildcareProvided(groupProfile.isChildcareProvided());
@@ -38,7 +42,6 @@ public class GroupSearchDocumentAdapter implements Function<GroupProfile, GroupS
             ref.setLabel(field.getSelection().getLabel());
             doc.getCustomFields().put(field.getName(), ref);
         }
-
 
         return doc;
     }
