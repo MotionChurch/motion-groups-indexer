@@ -3,6 +3,7 @@ package com.p4square.groupsindexer.model;
 import com.p4square.ccbapi.model.CustomPulldownFieldValue;
 import com.p4square.ccbapi.model.GroupProfile;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -18,8 +19,9 @@ public class GroupSearchDocumentAdapter implements Function<GroupProfile, GroupS
         doc.setDescription(groupProfile.getDescription());
         doc.setImageUrl(groupProfile.getImageUrl());
         doc.setLeaderId(groupProfile.getMainLeader().getId());
-        doc.setLeaderName(groupProfile.getMainLeader().getFullName());
-        doc.setLeaderEmail(groupProfile.getMainLeader().getEmail());
+        doc.setLeaderName(
+                        groupProfile.getMainLeader().getFirstName() + " " +
+                        abbreviateName(groupProfile.getMainLeader().getLastName()));
         if (groupProfile.getAddresses().size() > 0) {
             doc.setLocationCity(groupProfile.getAddresses().get(0).getCity());
         }
@@ -51,5 +53,11 @@ public class GroupSearchDocumentAdapter implements Function<GroupProfile, GroupS
         ref.setId(String.valueOf(r.getId()));
         ref.setLabel(r.getName());
         return ref;
+    }
+
+    private String abbreviateName(final String name) {
+        return Arrays.stream(name.split(" "))
+                .map(s -> s.substring(0, 1) + ".")
+                .reduce("", String::concat);
     }
 }
