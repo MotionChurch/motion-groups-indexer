@@ -96,8 +96,10 @@ public class SyncGroups implements RequestHandler<ScheduledEvent, String> {
                     continue;
                 }
 
-                if (!profile.getGroupType().getName().contains("Community")) {
-                    LOG.info("Skipping non-Community group " + profile.getName());
+                if (!(profile.getGroupType().getName().contains("Community") ||
+                      profile.getGroupType().getName().contains("Growth")))
+                {
+                    LOG.info("Skipping non-Community/Growth group " + profile.getName());
                     continue;
                 }
 
